@@ -11,9 +11,9 @@ class Command(object):
         self.Path = ""
         self.HasExecuted = False
         self.Response = CommandResponse()
-        self.CommandType = CommandEnumerations.eCommandType.LUNA
-        self.CommandAction = CommandEnumerations.eCommandAction.OPEN
-        self.SearchType = CommandEnumerations.eCommandSearchType.NONE
+        self.CommandType = eCommandType.LUNA
+        self.CommandAction = eCommandAction.OPEN
+        self.SearchType = eCommandSearchType.NONE
         self.AssociatedProcess = []
 
     def fullPath(self):
