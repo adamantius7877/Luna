@@ -13,6 +13,7 @@ setup(
     long_description=readme,
     author='Clayton Henderson',
     author_email='clayhenderson87@gmail.com',
+    url='https://github.com/adamantius7877/Luna',
     license=license,
     packages=find_packages(exclude=('tests','docs'))
 )
