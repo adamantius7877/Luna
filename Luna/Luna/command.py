@@ -7,7 +7,9 @@ class Command(object):
 
     def __init__(self):
         self.Name = ""
+        self.FileName = ""
         self.Aliases = []
+        self.Arguments = "" 
         self.Path = ""
         self.HasExecuted = False
         self.Response = CommandResponse()
@@ -19,9 +21,9 @@ class Command(object):
         self.SearchText = ""
 
     def fullPath(self):
-        lastIndex = self.Path.count() - 1
+        lastIndex = len(self.Path) - 1
         if self.Path[lastIndex] != '\\':
-            return self.Path + '\\' + self.Filename
-        return self.Path + self.Filename
+            return self.Path + '\\' + self.FileName
+        return self.Path + self.FileName
 
 

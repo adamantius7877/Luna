@@ -6,7 +6,9 @@ class CommandCortex:
     """This is the cortex that controls processing and interpreting commands"""
 
     def __init__(self):
+        self.DefaultCommands = []
         self.__RefreshCommandActions()
+        self.__GetDefaultComands()
 
     def InterpretCommand(self, textToInterpret):
         modifiedInput = self.ProcessText(textToInterpret)
@@ -31,17 +33,28 @@ class CommandCortex:
                     command.CommandType = eCommandType.SEARCH
                     command.SearchText = modifiedInput
                     command.Path = constants.HOME_DIRECTORY
+                    return command
                 else:
-                    command.CommandType = eCommandType.APPLICATION
+                    command = self.__GetCommand(modifiedInput)
+                    return command
                 break
 
-        # Strip the rest of the string to get a clear understanding of the rest of the input
         return command
 
     def ProcessText(self, textToProcess):
         textObject = json.loads(textToProcess)
         text = textObject["text"]
+        print(text)
         return text.lower()
+
+    def __GetCommand(self, possibleName):
+        for command in self.DefaultCommands:
+            if command.Name == possibleName:
+                return command
+            else:
+                for alias in command.Aliases:
+                    if alias == possibleName:
+                        return command
 
     def __RefreshCommandActions(self):
         self.CommandActionSwitch = dict()
@@ -79,3 +92,31 @@ class CommandCortex:
                 "search files",
                 "search for",
                 ]
+
+    def __GetDefaultComands(self):
+        command = Command()
+        command.Name = "chrome"
+        command.Aliases.append("internet")
+        command.Aliases.append("online")
+        command.Aliases.append("on line")
+        command.FileName = "chrome.exe"
+        command.Path = "C:\\Program Files (x86)\\Google\\Chrome\\Application"
+        command.CommandType = eCommandType.APPLICATION
+        command.CommandAction = eCommandAction.OPEN
+        self.DefaultCommands.append(command)
+        command = Command()
+        command.Name = "avengers"
+        command.Aliases.append("marvel avengers")
+        command.FileName = "Marvel's Avengers.url"
+        command.Path = "C:\\Users\\adama\\OneDrive\\Desktop"
+        command.CommandType = eCommandType.APPLICATION
+        command.CommandAction = eCommandAction.OPEN
+        self.DefaultCommands.append(command)
+        command = Command()
+        command.Name = "vim"
+        command.Aliases.append("them")
+        command.FileName = "gvim.exe"
+        command.Path = "C:\\Program Files (x86)\\Vim\\vim81"
+        command.CommandType = eCommandType.APPLICATION
+        command.CommandAction = eCommandAction.OPEN
+        self.DefaultCommands.append(command)

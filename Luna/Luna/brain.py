@@ -1,6 +1,7 @@
 from command import Command
 from cortex.commandcortex import CommandCortex
 from cortex.directorycortex import DirectoryCortex
+from cortex.applicationcortex import ApplicationCortex
 from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
 import threading, queue
 
@@ -9,14 +10,16 @@ class Brain(object):
     def __init__(self, luna):
         self.CommandActions = []
         self.Luna = luna
-        self.__RefreshCommandActions()
         self.CommandCortex = CommandCortex()
         self.DirectoryCortex = DirectoryCortex()
+        self.ApplicationCortex = ApplicationCortex()
         self.CommandQueue = queue.Queue()
         self.CommandThread = threading.Thread(target=self.commandQueueWorker, daemon=True)
 
     def InterpretCommand(self, textToInterpret):
         command = self.CommandCortex.InterpretCommand(textToInterpret)
+        if command is None:
+            return
         if command.CommandAction != eCommandAction.NONE:
             self.ProcessCommand(command)
 
@@ -32,42 +35,6 @@ class Brain(object):
             if command:
                 self.RunCommand(command)
 
-    def __RefreshCommandActions(self):
-        self.CommandActionSwitch = dict()
-        self.CommandActionSwitch["open"] = [eCommandAction.OPEN]
-        self.CommandActionSwitch["add"] = [eCommandAction.OPEN]
-        self.CommandActionSwitch["close"] = [eCommandAction.CLOSE]
-        self.CommandActionSwitch["create"] = [eCommandAction.CREATE]
-        self.CommandActionSwitch["pause"] = [eCommandAction.PAUSE]
-        self.CommandActionSwitch["play"] = [eCommandAction.PLAY]
-        self.CommandActionSwitch["unlock"] = [eCommandAction.UNLOCK]
-        self.CommandActionSwitch["search online for"] = [eCommandAction.SEARCH]
-        self.CommandActionSwitch["search online"] = [eCommandAction.SEARCH]
-        self.CommandActionSwitch["search network for"] = [eCommandAction.SEARCH]
-        self.CommandActionSwitch["search network"] = [eCommandAction.SEARCH]
-        self.CommandActionSwitch["search directories for"] = [eCommandAction.SEARCH]
-        self.CommandActionSwitch["search directories"] = [eCommandAction.SEARCH]
-        self.CommandActionSwitch["search files for"] = [eCommandAction.SEARCH]
-        self.CommandActionSwitch["search files"] = [eCommandAction.SEARCH]
-        self.CommandActions = [
-                "open",
-                "add",
-                "close",
-                "create",
-                "pause",
-                "play",
-                "unlock",
-                "search online for",
-                "search online",
-                "search network for",
-                "search network",
-                "search directories for",
-                "search directories",
-                "search files for",
-                "search files",
-                ]
-        self.CommandActionSwitch
-
     def RunCommand(self, command):
         if command.CommandType == eCommandType.LUNA:
             self.RunLunaCommand(command)
@@ -81,10 +48,9 @@ class Brain(object):
 
     def RunApplicationCommand(self, command):
         if command.CommandAction == eCommandAction.OPEN:
+            self.Luna.Speak("Opening " + command.Name)
             self.ApplicationCortex.RunCommand(command)
         elif command.CommandAction == eCommandAction.CLOSE:
-            self.ApplicationCortex.StopCommand(command)
-        elif command.CommandAction == eCommandAction.CREATE:
             self.ApplicationCortex.StopCommand(command)
 
     def RunSearchCommand(self, command):
