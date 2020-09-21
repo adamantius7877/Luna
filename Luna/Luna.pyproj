@@ -31,6 +31,15 @@
     <Compile Include="luna\commandresponse.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="luna\constants.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="luna\cortex\commandcortex.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="luna\cortex\directorycortex.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="luna\cortex\__init__.py">
       <SubType>Code</SubType>
     </Compile>

@@ -1,3 +1,4 @@
+from command import Command
 import pyttsx3, threading, queue
 class Mouth(object):
     """This class is used to convert text into speech through a configured audio device"""
@@ -25,3 +26,9 @@ class Mouth(object):
             engine.say(textToSpeak)
             engine.runAndWait();
             print('Said: ' + textToSpeak)
+
+    def SpeakCommand(self, command):
+        textToSpeak = ""
+        if command.CommandAction == eCommandAction.OPEN:
+            textToSpeak += "opening"
+

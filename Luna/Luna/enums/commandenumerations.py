@@ -1,6 +1,7 @@
 from enum import IntEnum
 class eCommandAction(IntEnum):
     """This describes what action to perform"""
+    NONE = 0,
     OPEN = 1,
     CLOSE = 2,
     CREATE = 3,

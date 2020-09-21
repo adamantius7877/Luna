@@ -12,9 +12,11 @@ class Command(object):
         self.HasExecuted = False
         self.Response = CommandResponse()
         self.CommandType = eCommandType.LUNA
-        self.CommandAction = eCommandAction.OPEN
+        self.CommandAction = eCommandAction.NONE
         self.SearchType = eCommandSearchType.NONE
         self.AssociatedProcess = []
+        self.SearchExtension = ""
+        self.SearchText = ""
 
     def fullPath(self):
         lastIndex = self.Path.count() - 1

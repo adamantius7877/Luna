@@ -12,7 +12,7 @@ class Luna(object):
             self.Ears = Ears(self)
             self.Mouth = Mouth(self)
             self.Eyes = Eyes(self)
-            self.Mouth.Speak("All systems online.  It's good to be back.")
+            self.Mouth.Speak("Online.")
             self.IsRunning = False
             self.IsInitialized = True
         
@@ -29,6 +29,9 @@ class Luna(object):
         def Close(self):
             self.Stop()
             self.IsClosing = True
+
+        def Speak(self, textToSpeak):
+            self.Mouth.Speak(textToSpeak);
 
     instance = None
     def __init__(self):
