@@ -33,6 +33,9 @@ class Luna(object):
         def Speak(self, textToSpeak):
             self.Mouth.Speak(textToSpeak);
 
+        def InterpretCommand(self, commandText):
+            self.Brain.InterpretCommand(commandText)
+
     instance = None
     def __init__(self):
         if not Luna.instance:
@@ -44,4 +47,5 @@ class Luna(object):
 while True:
     luna = Luna()
     luna.instance.Start()
+    luna.instance.InterpretCommand("luna open input")
     waitInput = input()

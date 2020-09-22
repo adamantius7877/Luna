@@ -2,6 +2,8 @@ from command import Command
 from cortex.commandcortex import CommandCortex
 from cortex.directorycortex import DirectoryCortex
 from cortex.applicationcortex import ApplicationCortex
+from cortex.ahkcortex import AHKCortex
+from cortex.displaycortex import DisplayCortex
 from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
 import threading, queue
 
@@ -13,6 +15,8 @@ class Brain(object):
         self.CommandCortex = CommandCortex()
         self.DirectoryCortex = DirectoryCortex()
         self.ApplicationCortex = ApplicationCortex()
+        self.AHKCortex = AHKCortex()
+        self.DisplayCortex = DisplayCortex(self.Luna)
         self.CommandQueue = queue.Queue()
         self.CommandThread = threading.Thread(target=self.commandQueueWorker, daemon=True)
 
@@ -44,7 +48,16 @@ class Brain(object):
             self.RunSearchCommand(command)
 
     def RunLunaCommand(self, command):
-        return
+        if command.CommandAction == eCommandAction.FOCUS:
+            self.AHKCortex.SwitchActiveWindow(command)
+        elif command.CommandAction == eCommandAction.MUTE:
+            self.AHKCortex.Mute()
+        elif command.CommandAction == eCommandAction.UNMUTE:
+            self.AHKCortex.Unmute()
+        elif command.CommandAction == eCommandAction.OPEN and command.Name == "input":
+            self.DisplayCortex.DisplayInputWindow()
+        elif command.CommandAction == eCommandAction.PLAY or command.CommandAction == eCommandAction.PAUSE:
+            self.AHKCortex.TogglePlayPause()
 
     def RunApplicationCommand(self, command):
         if command.CommandAction == eCommandAction.OPEN:
@@ -57,3 +70,9 @@ class Brain(object):
         self.Luna.Speak("Searching")
         self.DirectoryCortex.SearchFiles(command);
         self.Luna.Speak("Search complete.  I found " + str(len(command.Response.Results)) + " files containing the text " + command.SearchText)
+        self.DisplayCortex.DisplayResult(command)
+        print("---Begin Search Results---")
+        for searchResponse in command.Response.Results:
+            print(searchResponse.FileName)
+            print(" - " + searchResponse.FilePath)
+        print("---End  Search  Results---")

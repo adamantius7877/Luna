@@ -34,6 +34,9 @@
     <Compile Include="luna\constants.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="luna\cortex\ahkcortex.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="luna\cortex\applicationcortex.py">
       <SubType>Code</SubType>
     </Compile>
@@ -41,6 +44,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="luna\cortex\directorycortex.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="luna\cortex\displaycortex.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="luna\cortex\__init__.py">

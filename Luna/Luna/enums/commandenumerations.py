@@ -9,7 +9,10 @@ class eCommandAction(IntEnum):
     PLAY = 5,
     PAUSE = 6,
     SEARCH = 7,
-    UNLOCK = 8
+    UNLOCK = 8,
+    FOCUS = 9,
+    MUTE = 10,
+    UNMUTE = 11
 
 class eCommandSearchType(IntEnum):
     """This is the type of search the command is to use"""

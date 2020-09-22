@@ -33,15 +33,26 @@ class CommandCortex:
                     command.CommandType = eCommandType.SEARCH
                     command.SearchText = modifiedInput
                     command.Path = constants.HOME_DIRECTORY
-                    return command
+                    break
+                    #return command
+                elif command.CommandAction == eCommandAction.FOCUS or\
+                     command.CommandAction == eCommandAction.PAUSE or\
+                     command.CommandAction == eCommandAction.PLAY:
+                    command.CommandType = eCommandType.LUNA
+                    command.Name = modifiedInput
+                    break
+                    #return command
                 else:
                     command = self.__GetCommand(modifiedInput)
-                    return command
+                    #return command
+                    break
                 break
 
         return command
 
     def ProcessText(self, textToProcess):
+        if textToProcess.find('{') < 0:
+            return textToProcess;
         textObject = json.loads(textToProcess)
         text = textObject["text"]
         print(text)
@@ -74,6 +85,9 @@ class CommandCortex:
         self.CommandActionSwitch["search for"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["search files for"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["search files"] = [eCommandAction.SEARCH]
+        self.CommandActionSwitch["switch to"] = [eCommandAction.FOCUS]
+        self.CommandActionSwitch["focus"] = [eCommandAction.FOCUS]
+        self.CommandActionSwitch["switch focus to"] = [eCommandAction.FOCUS]
         self.CommandActions = [
                 "open",
                 "add",
@@ -91,6 +105,7 @@ class CommandCortex:
                 "search files for",
                 "search files",
                 "search for",
+                "switch to"
                 ]
 
     def __GetDefaultComands(self):
@@ -118,5 +133,12 @@ class CommandCortex:
         command.FileName = "gvim.exe"
         command.Path = "C:\\Program Files (x86)\\Vim\\vim81"
         command.CommandType = eCommandType.APPLICATION
+        command.CommandAction = eCommandAction.OPEN
+        self.DefaultCommands.append(command)
+        command.Name = "input"
+        command.Aliases.append("in put")
+        command.FileName = ""
+        command.Path = ""
+        command.CommandType = eCommandType.LUNA
         command.CommandAction = eCommandAction.OPEN
         self.DefaultCommands.append(command)

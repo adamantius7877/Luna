@@ -30,7 +30,7 @@ class Ears(object):
                 self.Luna.Brain.InterpretCommand(result)
 
     def Listen(self):
-       self.Thread = threading.Thread(target=self.__InnerListen) 
+       self.Thread = threading.Thread(target=self.__InnerListen, daemon=True) 
        self.Thread.start()
 
     def StopListening(self):
