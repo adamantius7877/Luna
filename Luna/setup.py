@@ -12,7 +12,7 @@ setup(
     description='Digital assistant for everyday use',
     long_description=readme,
     author='Clayton Henderson',
-    author_email='clayhenderson87@gmail.com',
+    author_email='adamantius7877@gmail.com',
     url='https://github.com/adamantius7877/Luna',
     license=license,
     packages=find_packages(exclude=('tests','docs'))

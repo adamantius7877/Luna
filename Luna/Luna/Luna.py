@@ -47,5 +47,4 @@ class Luna(object):
 while True:
     luna = Luna()
     luna.instance.Start()
-    luna.instance.InterpretCommand("luna open input")
     waitInput = input()

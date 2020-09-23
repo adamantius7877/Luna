@@ -12,6 +12,7 @@ class CommandCortex:
 
     def InterpretCommand(self, textToInterpret):
         modifiedInput = self.ProcessText(textToInterpret)
+        if len(modifiedInput) == 0: return
         command = Command()
         indexOfCommandAction = -1
 
@@ -30,9 +31,13 @@ class CommandCortex:
                 modifiedInput = modifiedInput.strip()
                 command.CommandAction = self.CommandActionSwitch[commandAction][0]
                 if command.CommandAction == eCommandAction.SEARCH:
-                    command.CommandType = eCommandType.SEARCH
-                    command.SearchText = modifiedInput
-                    command.Path = constants.HOME_DIRECTORY
+                    if commandAction.find("online") >= 0:
+                        command = self.__GetCommand("chrome")
+                        command.Arguments = constants.GOOGLE_QUERY_BASE + modifiedInput
+                    else:
+                        command.CommandType = eCommandType.SEARCH
+                        command.SearchText = modifiedInput
+                        command.Path = constants.HOME_DIRECTORY
                     break
                     #return command
                 elif command.CommandAction == eCommandAction.FOCUS or\
@@ -55,13 +60,14 @@ class CommandCortex:
             return textToProcess;
         textObject = json.loads(textToProcess)
         text = textObject["text"]
-        print(text)
+        if len(text) > 0:
+            print(text)
         return text.lower()
 
     def __GetCommand(self, possibleName):
         for command in self.DefaultCommands:
             if command.Name == possibleName:
-                return command
+                return self.GetCopy(command)
             else:
                 for alias in command.Aliases:
                     if alias == possibleName:
@@ -77,7 +83,9 @@ class CommandCortex:
         self.CommandActionSwitch["play"] = [eCommandAction.PLAY]
         self.CommandActionSwitch["unlock"] = [eCommandAction.UNLOCK]
         self.CommandActionSwitch["search online for"] = [eCommandAction.SEARCH]
+        self.CommandActionSwitch["search on line for"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["search online"] = [eCommandAction.SEARCH]
+        self.CommandActionSwitch["search on line"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["search network for"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["search network"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["search directories for"] = [eCommandAction.SEARCH]
@@ -86,8 +94,10 @@ class CommandCortex:
         self.CommandActionSwitch["search files for"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["search files"] = [eCommandAction.SEARCH]
         self.CommandActionSwitch["switch to"] = [eCommandAction.FOCUS]
+        self.CommandActionSwitch["switched to"] = [eCommandAction.FOCUS]
         self.CommandActionSwitch["focus"] = [eCommandAction.FOCUS]
         self.CommandActionSwitch["switch focus to"] = [eCommandAction.FOCUS]
+        self.CommandActionSwitch["switched focus to"] = [eCommandAction.FOCUS]
         self.CommandActions = [
                 "open",
                 "add",
@@ -142,3 +152,16 @@ class CommandCortex:
         command.CommandType = eCommandType.LUNA
         command.CommandAction = eCommandAction.OPEN
         self.DefaultCommands.append(command)
+
+    def GetCopy(self, command):
+        commandCopy = Command()
+        commandCopy.Name = command.Name
+        commandCopy.FileName = command.FileName
+        commandCopy.Arguments = command.Arguments
+        commandCopy.Path = command.Path
+        commandCopy.CommandType = command.CommandType
+        commandCopy.CommandAction = command.CommandAction
+        commandCopy.SearchType = command.SearchType
+        commandCopy.SearchExtension = command.SearchExtension
+        commandCopy.SearchText = command.SearchText
+        return commandCopy

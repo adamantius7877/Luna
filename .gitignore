@@ -339,4 +339,6 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /Luna/model
+/Luna/model_big
+/Luna/model_small
 /Luna/env

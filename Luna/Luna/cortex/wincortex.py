@@ -1,7 +1,6 @@
 from ahk import AHK
-import constants
 
-class AHKCortex(object):
+class OSCortex(object):
     """This cortex handles dealing with Auto Hot Key"""
 
     def __init__(self):

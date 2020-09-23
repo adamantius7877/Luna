@@ -34,7 +34,7 @@
     <Compile Include="luna\constants.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\cortex\ahkcortex.py">
+    <Compile Include="luna\cortex\wincortex.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="luna\cortex\applicationcortex.py">

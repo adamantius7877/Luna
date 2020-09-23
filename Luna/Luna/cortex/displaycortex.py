@@ -1,6 +1,5 @@
 import tkinter as tk
 from command import Command
-from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
 import threading
 
 class DisplayCortex():
@@ -17,9 +16,16 @@ class DisplayCortex():
             lock = threading.Lock()
             lock.acquire()
             window = tk.Tk()
+            window.title('Luna Search Results')
+            window.minsize(300,200)
+            print("---Begin Search Results---")
             for searchResult in command.Response.Results:
+                print(searchResult.FileName)
+                print(" - " + searchResult.FilePath)
                 results = tk.Label(master=window, text=searchResult.FileName, foreground="white", background="black")
                 results.pack()
+            print("---End  Search  Results---")
+            window.bell()
             window.mainloop()
             lock.release()
 
@@ -27,12 +33,23 @@ class DisplayCortex():
         commandToRun = event.widget.get()
         self.Luna.InterpretCommand(commandToRun)
 
-    def TryDisplay(self):
+    def RunSpeak(self, event):
+        textToSpeak = event.widget.get()
+        self.Luna.Speak(textToSpeak)
+
+    def DisplayThread(self):
         window = tk.Tk()
+        window.title('Luna Input Test Window')
+        window.minsize(300,200)
         label = tk.Label(text="Command:")
         label.pack()
-        entry = tk.Entry()
+        entry = tk.Entry(width=45)
         entry.bind("<Return>", self.RunCommand)
+        entry.pack()
+        label = tk.Label(text="Speak:")
+        label.pack()
+        entry = tk.Entry(width=45)
+        entry.bind("<Return>", self.RunSpeak)
         entry.pack()
         #button = tk.Button(text="Run Command")
         #button.pack()
@@ -40,4 +57,4 @@ class DisplayCortex():
 
 
     def DisplayInputWindow(self):
-        threading.Thread(target=self.TryDisplay, daemon=True).start()
+        threading.Thread(target=self.DisplayThread, daemon=True).start()

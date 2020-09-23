@@ -1,6 +1,7 @@
 LUNA_NAME = "luna"
 EMPTY_STRING = ""
 HOME_DIRECTORY = "C:\\Users\\adama"
+GOOGLE_QUERY_BASE = "https://google.com/search?query="
 
 
 # Auto Hot Key Constants

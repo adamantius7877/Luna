@@ -2,10 +2,28 @@ from command import Command
 from cortex.commandcortex import CommandCortex
 from cortex.directorycortex import DirectoryCortex
 from cortex.applicationcortex import ApplicationCortex
-from cortex.ahkcortex import AHKCortex
 from cortex.displaycortex import DisplayCortex
 from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
-import threading, queue
+import sys, threading, queue
+
+if sys.platform == 'cli':
+    from serial.serialcli import Serial
+else:
+    import os
+    # chose an implementation, depending on os
+    if os.name == 'nt':  # sys.platform == 'win32':
+        from cortex.wincortex import OSCortex
+    elif os.name == 'posix':
+        from cortex.nixcortex import OSCortex
+    elif os.name == 'java':
+        from cortex.maccortex import OSCortex
+    else:
+        raise ImportError(
+            "Sorry: no implementation for your platform ('{}') available".format(
+                os.name
+            )
+        )
+
 
 class Brain(object):
     """description of class"""
@@ -15,10 +33,11 @@ class Brain(object):
         self.CommandCortex = CommandCortex()
         self.DirectoryCortex = DirectoryCortex()
         self.ApplicationCortex = ApplicationCortex()
-        self.AHKCortex = AHKCortex()
+        self.OSCortex = OSCortex()
         self.DisplayCortex = DisplayCortex(self.Luna)
         self.CommandQueue = queue.Queue()
         self.CommandThread = threading.Thread(target=self.commandQueueWorker, daemon=True)
+        self.DisplayCortex.DisplayInputWindow()
 
     def InterpretCommand(self, textToInterpret):
         command = self.CommandCortex.InterpretCommand(textToInterpret)
@@ -37,7 +56,7 @@ class Brain(object):
         while True:
             command = self.CommandQueue.get()
             if command:
-                self.RunCommand(command)
+                threading.Thread(target=self.RunCommand, args=[command],daemon=True).start()
 
     def RunCommand(self, command):
         if command.CommandType == eCommandType.LUNA:
@@ -48,16 +67,16 @@ class Brain(object):
             self.RunSearchCommand(command)
 
     def RunLunaCommand(self, command):
-        if command.CommandAction == eCommandAction.FOCUS:
-            self.AHKCortex.SwitchActiveWindow(command)
-        elif command.CommandAction == eCommandAction.MUTE:
-            self.AHKCortex.Mute()
-        elif command.CommandAction == eCommandAction.UNMUTE:
-            self.AHKCortex.Unmute()
-        elif command.CommandAction == eCommandAction.OPEN and command.Name == "input":
+        if command.CommandAction == eCommandAction.OPEN and command.Name == "input":
             self.DisplayCortex.DisplayInputWindow()
+        elif command.CommandAction == eCommandAction.FOCUS:
+            self.OSCortex.SwitchActiveWindow(command)
+        elif command.CommandAction == eCommandAction.MUTE:
+            self.OSCortex.Mute()
+        elif command.CommandAction == eCommandAction.UNMUTE:
+            self.OSCortex.Unmute()
         elif command.CommandAction == eCommandAction.PLAY or command.CommandAction == eCommandAction.PAUSE:
-            self.AHKCortex.TogglePlayPause()
+            self.OSCortex.TogglePlayPause()
 
     def RunApplicationCommand(self, command):
         if command.CommandAction == eCommandAction.OPEN:
@@ -67,12 +86,10 @@ class Brain(object):
             self.ApplicationCortex.StopCommand(command)
 
     def RunSearchCommand(self, command):
-        self.Luna.Speak("Searching")
-        self.DirectoryCortex.SearchFiles(command);
-        self.Luna.Speak("Search complete.  I found " + str(len(command.Response.Results)) + " files containing the text " + command.SearchText)
-        self.DisplayCortex.DisplayResult(command)
-        print("---Begin Search Results---")
-        for searchResponse in command.Response.Results:
-            print(searchResponse.FileName)
-            print(" - " + searchResponse.FilePath)
-        print("---End  Search  Results---")
+        if command.SearchType == eCommandSearchType.ONLINE:
+            self.ApplicationCortex.RunCommand(command)
+        else:
+            self.Luna.Speak("Searching")
+            self.DirectoryCortex.SearchFiles(command);
+            self.Luna.Speak("Search complete.  I found " + str(len(command.Response.Results)) + " files containing the text " + command.SearchText)
+            self.DisplayCortex.DisplayResult(command)
