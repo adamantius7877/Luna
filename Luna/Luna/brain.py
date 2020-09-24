@@ -76,6 +76,7 @@ class Brain(object):
             self.CommandThread = threading.Thread(target=self.commandQueueWorker, daemon=True)
             self.CommandThread.start()
 
+    #testing
     def commandQueueWorker(self):
         while True:
             command = self.CommandQueue.get()
