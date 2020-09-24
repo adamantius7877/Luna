@@ -120,31 +120,6 @@ class CommandCortex:
 
     def __GetDefaultComands(self):
         command = Command()
-        command.Name = "chrome"
-        command.Aliases.append("internet")
-        command.Aliases.append("online")
-        command.Aliases.append("on line")
-        command.FileName = "chrome.exe"
-        command.Path = "C:\\Program Files (x86)\\Google\\Chrome\\Application"
-        command.CommandType = eCommandType.APPLICATION
-        command.CommandAction = eCommandAction.OPEN
-        self.DefaultCommands.append(command)
-        command = Command()
-        command.Name = "avengers"
-        command.Aliases.append("marvel avengers")
-        command.FileName = "Marvel's Avengers.url"
-        command.Path = "C:\\Users\\adama\\OneDrive\\Desktop"
-        command.CommandType = eCommandType.APPLICATION
-        command.CommandAction = eCommandAction.OPEN
-        self.DefaultCommands.append(command)
-        command = Command()
-        command.Name = "vim"
-        command.Aliases.append("them")
-        command.FileName = "gvim.exe"
-        command.Path = "C:\\Program Files (x86)\\Vim\\vim81"
-        command.CommandType = eCommandType.APPLICATION
-        command.CommandAction = eCommandAction.OPEN
-        self.DefaultCommands.append(command)
         command.Name = "input"
         command.Aliases.append("in put")
         command.FileName = ""
@@ -165,3 +140,19 @@ class CommandCortex:
         commandCopy.SearchExtension = command.SearchExtension
         commandCopy.SearchText = command.SearchText
         return commandCopy
+
+    def GetExecutableSearchCommandForPath(self, path, extension):
+        command = Command()
+        command.Path = path
+        command.CommandType = eCommandType.SEARCH
+        command.CommandAction = eCommandAction.SEARCH
+        command.SearchType = eCommandSearchType.FILES
+        command.SearchExtension = extension
+        command.SearchText = "*"
+        return command
+
+    def GetExecutableSearchCommandsForPath(self, paths, extension):
+        commands = []
+        for path in paths:
+            commands.append(self.GetExecutableSearchCommandForPath(path, extension))
+        return commands

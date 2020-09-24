@@ -1,5 +1,11 @@
 from ahk import AHK
 
+from win32api import GetLogicalDriveStrings
+from win32file import GetDriveType
+
+import win32con
+
+
 class OSCortex(object):
     """This cortex handles dealing with Auto Hot Key"""
 
@@ -29,3 +35,24 @@ class OSCortex(object):
                 self.AHK.key_press(constants.SPACE_KEY)
                 activeWindow.activate()
                 break;
+
+    def GetExecutableExtension(self):
+        return "exe"
+
+    def GetDrives(self):
+        allDrives = []
+        drive_filters_examples = [
+            (None, "All"),
+            ((win32con.DRIVE_REMOVABLE,), "Removable"),
+            ((win32con.DRIVE_FIXED, win32con.DRIVE_CDROM), "Fixed and CDROM"),
+        ]
+        for (drive_types_tuple, display_text) in drive_filters_examples:
+            drives = self.__get_drives_list(drive_types=drive_types_tuple)
+            for drive in drives:
+                allDrives.append("{0:s}".format(drive))
+        return allDrives
+
+    def __get_drives_list(self, drive_types=(win32con.DRIVE_REMOVABLE,)):
+        drives_str = GetLogicalDriveStrings()
+        drives = [item for item in drives_str.split("\x00") if item]
+        return [item[:2] for item in drives if drive_types is None or GetDriveType(item) in drive_types]

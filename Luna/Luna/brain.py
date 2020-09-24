@@ -4,6 +4,7 @@ from cortex.directorycortex import DirectoryCortex
 from cortex.applicationcortex import ApplicationCortex
 from cortex.displaycortex import DisplayCortex
 from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
+from datetime import datetime
 import sys, threading, queue
 
 if sys.platform == 'cli':
@@ -30,6 +31,10 @@ class Brain(object):
     def __init__(self, luna):
         self.CommandActions = []
         self.Luna = luna
+        self.AllApplications = []
+        self.AllowedApplications = []
+        self.ExectuableExtension = ""
+        self.BaseDirectories = []
         self.CommandCortex = CommandCortex()
         self.DirectoryCortex = DirectoryCortex()
         self.ApplicationCortex = ApplicationCortex()
@@ -38,6 +43,25 @@ class Brain(object):
         self.CommandQueue = queue.Queue()
         self.CommandThread = threading.Thread(target=self.commandQueueWorker, daemon=True)
         self.DisplayCortex.DisplayInputWindow()
+        self.GetAllApplications()
+
+    def GetAllApplications(self):
+        self.ExectuableExtension = self.OSCortex.GetExecutableExtension()
+        self.BaseDirectories = self.OSCortex.GetDrives()
+        searchCommands = self.CommandCortex.GetExecutableSearchCommandsForPath(self.BaseDirectories, self.ExectuableExtension)
+        results = []
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("Start Time =", current_time)
+        for searchCommand in searchCommands:
+            self.DirectoryCortex.SearchFiles(searchCommand);
+            for result in searchCommand.Response.Results:
+                results.append(result.FileName)
+        print("I found " + str(len(results)) + " executables across " + str(len(self.BaseDirectories)))
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        print("End Time =", current_time)
+
 
     def InterpretCommand(self, textToInterpret):
         command = self.CommandCortex.InterpretCommand(textToInterpret)
