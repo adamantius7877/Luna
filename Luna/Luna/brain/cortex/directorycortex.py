@@ -16,12 +16,21 @@ class DirectoryCortex:
                 if checkExtension and hasSearch:
                     hasSearch = file.endswith(command.SearchExtension)
                 if hasSearch:
+                    if self.HasSpecialCharacters(file):
+                        continue
                     searchResult = FileSearchResult()
                     searchResult.FileName = file
                     fullPath = os.path.join(root, file)
                     searchResult.FileDirectory = os.path.dirname(fullPath)
                     searchResult.FilePath = fullPath
                     command.Response.Results.append(searchResult)
+
+    def HasSpecialCharacters(self, file):
+        specialCharacters = ["$"]
+        for specialCharacter in specialCharacters:
+            if file.find(specialCharacter) >= 0:
+                return True
+        return False
 
 class SearchResponse(CommandResponse):
     """The response given when executing a search command"""

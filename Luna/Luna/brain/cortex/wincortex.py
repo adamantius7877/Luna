@@ -49,7 +49,7 @@ class OSCortex(object):
         for (drive_types_tuple, display_text) in drive_filters_examples:
             drives = self.__get_drives_list(drive_types=drive_types_tuple)
             for drive in drives:
-                allDrives.append("{0:s}".format(drive))
+                allDrives.append("{0:s}\\".format(drive))
         return allDrives
 
     def __get_drives_list(self, drive_types=(win32con.DRIVE_REMOVABLE,)):
