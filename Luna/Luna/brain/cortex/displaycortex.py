@@ -2,7 +2,7 @@ import tkinter as tk
 from common.command import Command
 import threading, os
 import pyglet
-import ratcave as rc
+#import ratcave as rc
 
 class DisplayCortex():
     """This cortex handles displaying UI elements"""
