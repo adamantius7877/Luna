@@ -25,6 +25,9 @@
     <Compile Include="luna\brain\brain.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="luna\brain\cortex\nixcortex.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="luna\brain\neurons\textprocessingneuron.py">
       <SubType>Code</SubType>
     </Compile>
