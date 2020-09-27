@@ -7,6 +7,10 @@ class CommandCortex:
     """This is the cortex that controls processing and interpreting commands"""
 
     def __init__(self):
+        self.AllCommands = []
+        self.AvailableCommands = []
+        self.AllApplicationCommands = []
+        self.AvailableApplicationCommands = []
         self.DefaultCommands = []
         self.__RefreshCommandActions()
         self.TextProcessingNeuron = TextProcessingNeuron(self.CommandActions);
@@ -53,7 +57,7 @@ class CommandCortex:
         return text.lower()
 
     def __GetCommand(self, possibleName):
-        command = self.__GetCommandFromList(possibleName, self.AvailableApplications)
+        command = self.__GetCommandFromList(possibleName, self.AvailableApplicationCommands)
         if command is None:
             command = self.__GetCommandFromList(possibleName, self.DefaultCommands)
         return command
@@ -160,3 +164,33 @@ class CommandCortex:
         "SearchText" : command.SearchText,
         }
         return jsonObject
+
+    def FindApplicationCommandsByName(self, applicationName, allowMultiple):
+        results = []
+        for applicationCommand in self.AllApplicationCommands:
+            if applicationCommand.Name.lower().find(applicationName.lower()) >= 0:
+                results.append(applicationCommand)
+                if not allowMultiple:
+                    return results
+        return results
+
+    def FindApplicationCommandsByDirectory(self, directoryName, allowMultiple):
+        results = []
+        for applicationCommand in self.AllApplicationCommands:
+            if applicationCommand.Path.lower().find(directoryName.lower()) >= 0:
+                results.append(applicationCommand)
+                if not allowMultiple:
+                    return results
+        return results
+
+    def SetAvailableApplicationCommands(self, listOfApplications):
+        for applicationName in listOfApplications:
+            for applicationCommand in self.AllApplicationCommands:
+                if applicationCommand.Name == applicationCommand:
+                    self.AddAvailableCommand(applicationCommand)
+
+    def AddAvailableCommand(self, command):
+        for availableCommand in self.AvailableCommands:
+            if availableCommand.Name == command.Name:
+                return
+        self.AvailableCommands.append(command)

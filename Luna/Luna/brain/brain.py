@@ -30,8 +30,6 @@ class Brain(object):
     def __init__(self, luna):
         self.CommandActions = []
         self.Luna = luna
-        self.AllApplications = []
-        self.AllowedApplications = []
         self.BaseDirectories = []
         self.CommandCortex = CommandCortex()
         self.DirectoryCortex = DirectoryCortex()
@@ -60,7 +58,7 @@ class Brain(object):
         if not generateCommands:
             jsonApplicationCommands = json.loads(test2)
             self.LoadApplicationCommandsFromJsonObject(jsonApplicationCommands)
-            if len(self.AllApplications) == 0:
+            if len(self.CommandCortex.AllApplicationCommands) == 0:
                 generateCommands = True
             else:
                 self.PrintTimeAndMessage("Commands loaded")
@@ -74,7 +72,7 @@ class Brain(object):
                 self.DirectoryCortex.SearchFiles(searchCommand)
                 for result in searchCommand.Response.Results:
                     command = self.CommandCortex.GetCommandForApplicationPath(result)
-                    self.AllApplications.append(command)
+                    self.CommandCortex.AllApplicationCommands.append(command)
                     commands.append(self.CommandCortex.GetJsonObjectFromApplicationCommand(command))
             self.PrintTimeAndMessage("I found " + str(len(commands)) + " executables across " + str(len(self.BaseDirectories)) + " directories: ")
             commandsJsonString = json.dumps(commands, indent=4)
@@ -86,7 +84,7 @@ class Brain(object):
 
     def LoadApplicationCommandsFromJsonObject(self, jsonApplicationCommands):
         for jsonCommand in jsonApplicationCommands:
-            self.AllApplications.append(self.CommandCortex.GetApplicationCommandFromJsonObject(jsonCommand))
+            self.CommandCortex.AllApplicationCommands.append(self.CommandCortex.GetApplicationCommandFromJsonObject(jsonCommand))
 
     def PrintTimeAndMessage(self, message):
         now = datetime.now()
