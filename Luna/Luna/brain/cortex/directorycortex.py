@@ -1,4 +1,4 @@
-from commandresponse import CommandResponse
+from common.commandresponse import CommandResponse
 import os
 class DirectoryCortex:
     """This cortex handles any File IO with the OS as well as searches"""
@@ -8,14 +8,19 @@ class DirectoryCortex:
         command.Response = SearchResponse()
         for root, dirs, files in os.walk(command.Path):
             for file in files:
-                hasSearch = file.lower().find(command.SearchText)
+                hasSearch = False
+                if command.SearchText == "*":
+                    hasSearch = True
+                else:
+                    hasSearch = file.lower().find(command.SearchText) >= 0
                 if checkExtension and hasSearch:
                     hasSearch = file.endswith(command.SearchExtension)
-                if hasSearch >= 0:
+                if hasSearch:
                     searchResult = FileSearchResult()
                     searchResult.FileName = file
-                    searchResult.FileDirectory = dirs
-                    searchResult.FilePath = os.path.join(root,file)
+                    fullPath = os.path.join(root, file)
+                    searchResult.FileDirectory = os.path.dirname(fullPath)
+                    searchResult.FilePath = fullPath
                     command.Response.Results.append(searchResult)
 
 class SearchResponse(CommandResponse):

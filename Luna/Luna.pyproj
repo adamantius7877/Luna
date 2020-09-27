@@ -22,37 +22,46 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="luna\brain.py">
+    <Compile Include="luna\brain\brain.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\command.py">
+    <Compile Include="luna\brain\neurons\textprocessingneuron.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\commandresponse.py">
+    <Compile Include="luna\brain\neurons\__init__.py" />
+    <Compile Include="luna\brain\__init__.py" />
+    <Compile Include="luna\common\command.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\constants.py">
+    <Compile Include="luna\common\commandresponse.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\cortex\wincortex.py">
+    <Compile Include="luna\common\config.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\cortex\applicationcortex.py">
+    <Compile Include="luna\common\constants.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\cortex\commandcortex.py">
+    <Compile Include="luna\brain\cortex\wincortex.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\cortex\directorycortex.py">
+    <Compile Include="luna\brain\cortex\applicationcortex.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\cortex\displaycortex.py">
+    <Compile Include="luna\brain\cortex\commandcortex.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\cortex\__init__.py">
+    <Compile Include="luna\brain\cortex\directorycortex.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\ears.py">
+    <Compile Include="luna\brain\cortex\displaycortex.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="luna\brain\cortex\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="luna\common\__init__.py" />
+    <Compile Include="luna\senses\ears.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="luna\enums\commandenumerations.py">
@@ -61,13 +70,14 @@
     <Compile Include="luna\enums\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="luna\eyes.py">
+    <Compile Include="luna\senses\eyes.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="luna\luna.py" />
-    <Compile Include="luna\mouth.py">
+    <Compile Include="luna\senses\mouth.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="luna\senses\__init__.py" />
     <Compile Include="luna\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -82,8 +92,12 @@
   <ItemGroup>
     <Folder Include="luna\" />
     <Folder Include="docs\" />
-    <Folder Include="luna\cortex\" />
+    <Folder Include="luna\brain\cortex\" />
+    <Folder Include="luna\brain\neurons\" />
     <Folder Include="luna\enums\" />
+    <Folder Include="luna\brain\" />
+    <Folder Include="luna\common\" />
+    <Folder Include="luna\senses\" />
     <Folder Include="tests\" />
   </ItemGroup>
   <ItemGroup>

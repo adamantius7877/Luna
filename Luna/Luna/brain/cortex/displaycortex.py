@@ -1,5 +1,5 @@
 import tkinter as tk
-from command import Command
+from common.command import Command
 import threading
 
 class DisplayCortex():

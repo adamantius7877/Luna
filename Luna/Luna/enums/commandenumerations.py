@@ -12,7 +12,8 @@ class eCommandAction(IntEnum):
     UNLOCK = 8,
     FOCUS = 9,
     MUTE = 10,
-    UNMUTE = 11
+    UNMUTE = 11,
+    ADD = 12
 
 class eCommandSearchType(IntEnum):
     """This is the type of search the command is to use"""

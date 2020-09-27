@@ -1,2 +1,2 @@
 from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
-import constants
+import common.constants

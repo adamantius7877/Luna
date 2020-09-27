@@ -1,4 +1,4 @@
-from commandresponse import CommandResponse
+from common.commandresponse import CommandResponse
 from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
 
 class Command(object):

@@ -1,4 +1,4 @@
-from command import Command
+from common.command import Command
 import pyttsx3, threading, queue
 class Mouth(object):
     """This class is used to convert text into speech through a configured audio device"""

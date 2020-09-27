@@ -1,4 +1,4 @@
-from command import Command
+from common.command import Command
 import os, subprocess
 
 class ApplicationCortex:

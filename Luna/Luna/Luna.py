@@ -1,7 +1,7 @@
-from brain import Brain
-from ears import Ears
-from mouth import Mouth
-from eyes import Eyes
+from brain.brain import Brain
+from senses.ears import Ears
+from senses.mouth import Mouth
+from senses.eyes import Eyes
 
 class Luna(object):
     """Lexical Univeral Natural Assistant, or Luna"""
@@ -31,7 +31,8 @@ class Luna(object):
             self.IsClosing = True
 
         def Speak(self, textToSpeak):
-            self.Mouth.Speak(textToSpeak);
+            if self.Mouth is not None:
+                self.Mouth.Speak(textToSpeak);
 
         def InterpretCommand(self, commandText):
             self.Brain.InterpretCommand(commandText)
