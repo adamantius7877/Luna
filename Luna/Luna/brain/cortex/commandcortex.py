@@ -1,7 +1,8 @@
 from common.command import Command
 from brain.neurons.textprocessingneuron import TextProcessingNeuron
 from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
-import json, common.constants, common.config
+import json, common, redis
+from common import constants, config
 
 class CommandCortex:
     """This is the cortex that controls processing and interpreting commands"""
@@ -15,9 +16,13 @@ class CommandCortex:
         self.__RefreshCommandActions()
         self.TextProcessingNeuron = TextProcessingNeuron(self.CommandActions);
         self.__GetDefaultComands()
+        self.Redis = redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=0)
+        self.RedisPubSub = self.Redis.pubsub()
+        self.RedisPubSub.subscribe(**{constants.REDIS_EAR_CHANNEL:self.InterpretCommand})
+        self.RedisThread = self.RedisPubSub.run_in_thread(sleep_time=0.001)
 
     def InterpretCommand(self, textToInterpret):
-        processedText = self.ProcessText(textToInterpret)
+        processedText = str(textToInterpret["data"]) #self.ProcessText(textToInterpret)
         if len(processedText) == 0:
             return None
         processedSentence = self.TextProcessingNeuron.ProcessSentence(processedText)
@@ -50,6 +55,7 @@ class CommandCortex:
         return command
 
     def ProcessText(self, textToProcess):
+        print(str(textToProcess["data"]))
         if textToProcess.find('{') < 0:
             return textToProcess;
         textObject = json.loads(textToProcess)

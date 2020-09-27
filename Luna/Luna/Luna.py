@@ -8,19 +8,23 @@ class Luna(object):
     class __Luna(object):
         def __init__(self):
             self.val = None
+            self.Brain = []
+            self.Ears = []
+            self.Mouth = []
+            self.Eyes = []
+            self.IsRunning = False
+            self.IsInitialized = True
+        
+        def StartPrimary(self):
+            if self.IsRunning:
+                return
             self.Brain = Brain(self)
-            self.Ears = Ears(self)
+            self.Ears = []
             self.Mouth = Mouth(self)
             self.Eyes = Eyes(self)
             self.Mouth.Speak("Online.")
             self.IsRunning = False
-            self.IsInitialized = True
-        
-        def Start(self):
-            if self.IsRunning:
-                return
             self.IsRunning = True
-            self.Ears.Listen()
 
         def Stop(self):
             self.IsRunning = False
@@ -29,6 +33,10 @@ class Luna(object):
         def Close(self):
             self.Stop()
             self.IsClosing = True
+
+        def ListeningMode(self):
+            self.Ears = Ears()
+            self.Ears.Listen()
 
         def Speak(self, textToSpeak):
             if self.Mouth is not None:
@@ -44,8 +52,3 @@ class Luna(object):
 
     def __getattr__(self, name):
         return getattr(self.instance,name)
-
-while True:
-    luna = Luna()
-    luna.instance.Start()
-    waitInput = input()

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>d5ad43fb-dfeb-4960-b7de-df3caebf8686</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>luna\luna.py</StartupFile>
+    <StartupFile>luna\lunamain.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -61,6 +61,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="luna\common\__init__.py" />
+    <Compile Include="luna\lunaearservice.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="luna\lunamain.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="luna\senses\ears.py">
       <SubType>Code</SubType>
     </Compile>

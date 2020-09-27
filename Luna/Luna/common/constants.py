@@ -4,6 +4,12 @@ HOME_DIRECTORY = "C:\\Users\\adama"
 GOOGLE_QUERY_BASE = "https://google.com/search?query="
 LUNA_MODEL_FILE = "luna-test.obj"
 
+REDIS_EAR_CHANNEL = "ear-channel"
+REDIS_EYE_CHANNEL = "eye-channel"
+REDIS_MOUTH_CHANNEL = "mouth-channel"
+REDIS_COMMAND_CHANNEL = "command-channel"
+REDIS_EAR_SERVICE_CHANNEL = "ear-service-channel"
+
 
 # Auto Hot Key Constants
 MUTE_KEY = "Volume_Mute"
