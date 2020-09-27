@@ -344,3 +344,6 @@ healthchecksdb
 /Luna/env
 /Luna/luna_application_commands.json
 /Luna/luna_application_commands_back.json
+/Luna/luna-test.mtl
+/Luna/LunaTestModel.mtl
+/Luna/showluna.py

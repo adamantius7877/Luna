@@ -18,6 +18,8 @@ class CommandCortex:
 
     def InterpretCommand(self, textToInterpret):
         processedText = self.ProcessText(textToInterpret)
+        if len(processedText) == 0:
+            return None
         processedSentence = self.TextProcessingNeuron.ProcessSentence(processedText)
         if not processedSentence.IsLunaSubject: return None
         command = Command()

@@ -1,4 +1,5 @@
 from common import constants
+from enums.commandenumerations import eCommandType, eCommandAction, eCommandSearchType
 import nltk
 
 class TextProcessingNeuron(object):
@@ -8,6 +9,7 @@ class TextProcessingNeuron(object):
         self.CommandActions = commandActions
 
     def ProcessSentence(self, sentence):
+        print("Processing " + sentence)
         processedSentence = ProcessedSentence() 
         if(len(sentence) == 0): 
             processedSentence.Errors.append("No sentence provided")
@@ -19,6 +21,7 @@ class TextProcessingNeuron(object):
         if processedSentence.IsLunaSubject:
             self.PrintTags(processedSentence)
             print(processedSentence.Actions)
+        print("Finished processing " + sentence)
         return processedSentence
 
     def PrintTags(self, processedSentence):
@@ -46,7 +49,7 @@ class TextProcessingNeuron(object):
             elif tagValue.lower() == constants.LUNA_NAME.lower() and tagType == "NNP":
                 isValid = True
             elif tagType == "VBP" or tagType == "VB" or tagType == "JJ": 
-                commandActionSet = self.IsComandAction(tagValue)
+                commandActionSet = self.IsCommandAction(tagValue)
                 if commandActionSet[0]:
                     action[0] = commandActionSet[1]
                     action[2] = commandActionSet[2]
