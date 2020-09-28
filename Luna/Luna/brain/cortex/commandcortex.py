@@ -27,6 +27,7 @@ class CommandCortex:
             return None
         processedSentence = self.TextProcessingNeuron.ProcessSentence(processedText)
         if not processedSentence.IsLunaSubject: return None
+        self.Redis.publish("mouth-channel", "Processed " + processedText)
         command = Command()
         for action in processedSentence.Actions:
             actionStart = action[0]

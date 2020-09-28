@@ -2,6 +2,8 @@ from brain.brain import Brain
 from senses.ears import Ears
 from senses.mouth import Mouth
 from senses.eyes import Eyes
+from common import config, constants
+import redis
 
 class Luna(object):
     """Lexical Univeral Natural Assistant, or Luna"""
@@ -14,6 +16,7 @@ class Luna(object):
             self.Eyes = []
             self.IsRunning = False
             self.IsInitialized = True
+            self.Redis = redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=0)
         
         def StartPrimary(self):
             if self.IsRunning:
@@ -22,7 +25,7 @@ class Luna(object):
             self.Ears = []
             self.Mouth = Mouth(self)
             self.Eyes = Eyes(self)
-            self.Mouth.Speak("Online.")
+            self.Speak("Online.")
             self.IsRunning = False
             self.IsRunning = True
 
@@ -39,8 +42,7 @@ class Luna(object):
             self.Ears.Listen()
 
         def Speak(self, textToSpeak):
-            if self.Mouth is not None:
-                self.Mouth.Speak(textToSpeak);
+            self.Redis.publish("mouth-channel", textToSpeak)
 
         def InterpretCommand(self, commandText):
             self.Brain.InterpretCommand(commandText)
