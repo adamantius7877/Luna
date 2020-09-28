@@ -8,7 +8,8 @@ class Ears(object):
 
     def __init__(self):
         self.IsListening = False
-        self.Buffer = 1024*8
+        self.Format = pyaudio.paInt16
+        self.Buffer = 4096
         self.Rate = 44100
         self.Channels = 1
         SetLogLevel(-1)
@@ -37,7 +38,7 @@ class Ears(object):
     def __InnerListen(self):
         self.IsListening = True
         p = pyaudio.PyAudio()
-        self.Stream = p.open(format=pyaudio.paInt16, channels=self.Channels, rate=self.Rate, input=True, frames_per_buffer=self.Buffer, stream_callback=self.callback)
+        self.Stream = p.open(format=self.Format, channels=self.Channels, rate=self.Rate, input=True, frames_per_buffer=self.Buffer, stream_callback=self.callback)
         self.Stream.start_stream()
 
     def Listen(self):
