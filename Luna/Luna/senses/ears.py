@@ -38,7 +38,8 @@ class Ears(object):
     def __InnerListen(self):
         self.IsListening = True
         p = pyaudio.PyAudio()
-        self.Stream = p.open(format=self.Format, channels=self.Channels, rate=self.Rate, input=True, frames_per_buffer=self.Buffer, stream_callback=self.callback)
+        newRate = int(p.get_device_info_by_index(p.devindex).get('defaultSampleRate')) #44100
+        self.Stream = p.open(format=self.Format, channels=self.Channels, rate=newRate, input=True, frames_per_buffer=self.Buffer, stream_callback=self.callback)
         self.Stream.start_stream()
 
     def Listen(self):
