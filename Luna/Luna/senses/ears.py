@@ -8,8 +8,8 @@ class Ears(object):
 
     def __init__(self):
         self.IsListening = False
-        self.Buffer = 8000
-        self.Rate = 16000
+        self.Buffer = 1024*8
+        self.Rate = 44100
         self.Channels = 1
         SetLogLevel(-1)
         self.Model = Model("model_small")
