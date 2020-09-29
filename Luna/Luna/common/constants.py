@@ -9,6 +9,8 @@ REDIS_EYE_CHANNEL = "eye-channel"
 REDIS_MOUTH_CHANNEL = "mouth-channel"
 REDIS_COMMAND_CHANNEL = "command-channel"
 REDIS_EAR_SERVICE_CHANNEL = "ear-service-channel"
+REDIS_EAR_CHILD_SERVICE_CHANNEL = "ear-child-service-channel"
+REDIS_EAR_CHILD_REGISTRATION_CHANNEL = "ear-child-registration-channel"
 
 
 # Auto Hot Key Constants

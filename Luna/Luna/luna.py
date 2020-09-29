@@ -22,7 +22,7 @@ class Luna(object):
             if self.IsRunning:
                 return
             self.Brain = Brain(self)
-            self.Ears = []
+            self.Ears = Ears(self)
             self.Mouth = Mouth(self)
             self.Eyes = Eyes(self)
             self.Speak("Online.")
