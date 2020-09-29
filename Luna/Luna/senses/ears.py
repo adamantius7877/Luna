@@ -20,8 +20,6 @@ class Ears(object):
         self.Redis = redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=0)
         self.RedisPubSub = self.Redis.pubsub()
         self.RedisPubSub.subscribe(**{constants.REDIS_EAR_SERVICE_CHANNEL:self.ServiceMessage})
-        self.RedisPubSub.subscribe(**{constants.REDIS_EAR_CHILD_SERVICE_CHANNEL:self.ChildMessage})
-        self.RedisPubSub.subscribe(**{constants.REDIS_EAR_CHILD_REGISTRATION_CHANNEL:self.ChildRegister})
         self.RedisThread = self.RedisPubSub.run_in_thread(sleep_time=0.001)
         self.AlreadyRegistered = False
         self.InChildMode = False
@@ -31,19 +29,22 @@ class Ears(object):
     def SetChildMode(self, setChildMode):
         self.InChildMode = setChildMode
 
-    def ServiceMessage(self, message):
+    def ServiceMessage(self, data):
+        message = int(data["data"])
         if message == 0:
             self.StopListening()
         elif message == 1:
             self.Listen()
 
-    def ChildMessage(self, message):
+    def ChildMessage(self, data):
+        message = data["data"]
         with self.Lock:
             self.IsChildProcessing = True
         threading.Thread(target=self.ProcessAudio, args=(message, self.ChildFrameCount), daemon=True).start()
 
-    def ChildRegister(self, message):
+    def ChildRegister(self, data):
         if self.AlreadyRegistered: pass
+        message = next(iter(data.values()))
         self.ChildRecordingFile = wave.open("testchild.wav", "w")
         self.ChildRecordingFile.setsampwidth(2)
         self.ChildRecordingFile.setnchannels(self.Channels)
@@ -54,7 +55,7 @@ class Ears(object):
 
     def callback(self, in_data, frame_count, time_info, status):
         if self.InChildMode:
-            self.Redis.publish(constants.REDIS_EAR_CHILD_SERVICE_CHANNEL, in_data)
+            self.Redis.publish(constants.REDIS_EAR_CHILD_SERVICE_CHANNEL, (in_data))
         threading.Thread(target=self.ProcessAudio, args=(in_data,frame_count), daemon=True).start()
         return (in_data, pyaudio.paContinue)
 
@@ -91,7 +92,11 @@ class Ears(object):
         self.RecordingFile.setnchannels(self.Channels)
         self.RecordingFile.setframerate(self.Rate)
         if self.InChildMode:
-            self.Redis.publish(constants.REDIS_EAR_CHILD_REGISTRATION_CHANNEL, self.Rate)
+            self.Redis.publish(constants.REDIS_EAR_CHILD_REGISTRATION_CHANNEL, (self.Rate))
+        else:
+            self.RedisPubSub.subscribe(**{constants.REDIS_EAR_CHILD_SERVICE_CHANNEL:self.ChildMessage})
+            self.RedisPubSub.subscribe(**{constants.REDIS_EAR_CHILD_REGISTRATION_CHANNEL:self.ChildRegister})
+
         self.Stream.start_stream()
         print ("Listening")
 

@@ -15,7 +15,8 @@ class Mouth(object):
         self.RedisPubSub.subscribe(**{constants.REDIS_MOUTH_CHANNEL:self.ServiceMessage})
         self.RedisThread = self.RedisPubSub.run_in_thread(sleep_time=0.001)
 
-    def ServiceMessage(self, message):
+    def ServiceMessage(self, data):
+        message = str(data["data"])
         if len(message) > 0:
             self.Speak(message)
 

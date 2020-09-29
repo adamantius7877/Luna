@@ -22,7 +22,7 @@ class Luna(object):
             if self.IsRunning:
                 return
             self.Brain = Brain(self)
-            self.Ears = Ears(self)
+            self.Ears = []
             self.Mouth = Mouth(self)
             self.Eyes = Eyes(self)
             self.Speak("Online.")
@@ -42,7 +42,8 @@ class Luna(object):
             self.Ears.Listen()
 
         def Speak(self, textToSpeak):
-            self.Redis.publish("mouth-channel", textToSpeak)
+            print(textToSpeak)
+            self.Redis.publish("mouth-channel", (textToSpeak))
 
         def InterpretCommand(self, commandText):
             self.Brain.InterpretCommand(commandText)
