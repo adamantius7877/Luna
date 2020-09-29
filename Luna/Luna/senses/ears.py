@@ -12,6 +12,7 @@ class Ears(object):
         self.Buffer = 22050
         self.Rate = 44100
         self.Channels = 1
+        self.Lock = threading.Lock()
         SetLogLevel(-1)
         self.Model = Model("model_small")
         self.Rec = KaldiRecognizer(self.Model, self.Rate)
@@ -32,13 +33,17 @@ class Ears(object):
         return (in_data, pyaudio.paContinue)
 
     def ProcessAudio(self, in_data, frame_count):
-        if frame_count > 0 and len(in_data) > 0:
-            self.RecordingFile.writeframes(in_data)
-        if len(in_data) > 0 and self.Rec.AcceptWaveform(in_data):
-            result = self.Rec.Result()
-            sentence = self.ProcessText(result)
-            if len(sentence) > 0:
-                self.Redis.publish("ear-channel", sentence)
+        self.Lock.acquire()
+        try:
+            if frame_count > 0 and len(in_data) > 0:
+                self.RecordingFile.writeframes(in_data)
+            if len(in_data) > 0 and self.Rec.AcceptWaveform(in_data):
+                result = self.Rec.Result()
+                sentence = self.ProcessText(result)
+                if len(sentence) > 0:
+                    self.Redis.publish("ear-channel", sentence)
+        finally:
+            self.Lock.release()
 
 
     def __InnerListen(self):
