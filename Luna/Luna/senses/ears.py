@@ -28,6 +28,10 @@ class Ears(object):
             self.Listen()
 
     def callback(self, in_data, frame_count, time_info, status):
+        threading.Thread(target=self.ProcessAudio, args=(in_data,frame_count), daemon=True).start()
+        return (in_data, pyaudio.paContinue)
+
+    def ProcessAudio(self, in_data, frame_count):
         if frame_count > 0 and len(in_data) > 0:
             self.RecordingFile.writeframes(in_data)
         if len(in_data) > 0 and self.Rec.AcceptWaveform(in_data):
@@ -35,7 +39,7 @@ class Ears(object):
             sentence = self.ProcessText(result)
             if len(sentence) > 0:
                 self.Redis.publish("ear-channel", sentence)
-        return (in_data, pyaudio.paContinue)
+
 
     def __InnerListen(self):
         self.IsListening = True
@@ -64,7 +68,6 @@ class Ears(object):
        self.Thread.start()
 
     def StopListening(self):
-        self.RecordingFile.close()
         self.IsListening = False
         self.Thread._stop()
 
