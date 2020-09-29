@@ -26,6 +26,7 @@ class Ears(object):
         self.AlreadyRegistered = False
         self.InChildMode = False
         self.IsChildProcessing = False
+        self.ChildFrameCount = 0
 
     def SetChildMode(self, setChildMode):
         self.InChildMode = setChildMode
@@ -39,7 +40,7 @@ class Ears(object):
     def ChildMessage(self, message):
         with self.Lock:
             self.IsChildProcessing = True
-        threading.Thread(target=self.ProcessAudio, args=(message), daemon=True).start()
+        threading.Thread(target=self.ProcessAudio, args=(message, self.ChildFrameCount), daemon=True).start()
 
     def ChildRegister(self, message):
         if self.AlreadyRegistered: pass
@@ -47,13 +48,13 @@ class Ears(object):
         self.ChildRecordingFile.setsampwidth(2)
         self.ChildRecordingFile.setnchannels(self.Channels)
         self.ChildRecordingFile.setframerate(message)
+        self.ChildFrameCount = message / 2
         self.AlreadyRegistered = True
 
 
     def callback(self, in_data, frame_count, time_info, status):
         if self.InChildMode:
-            message = (in_data,frame_count)
-            self.Redis.publish(constants.REDIS_EAR_CHILD_SERVICE_CHANNEL, message)
+            self.Redis.publish(constants.REDIS_EAR_CHILD_SERVICE_CHANNEL, in_data)
         threading.Thread(target=self.ProcessAudio, args=(in_data,frame_count), daemon=True).start()
         return (in_data, pyaudio.paContinue)
 
