@@ -4,4 +4,4 @@ import redis
 lunaInstance = Luna()
 lunaInstance.ListeningMode()
 waitInput = input()
-
+lunaInstance.Stop()

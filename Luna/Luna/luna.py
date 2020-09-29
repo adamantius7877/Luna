@@ -14,9 +14,9 @@ class Luna(object):
             self.Ears = []
             self.Mouth = []
             self.Eyes = []
+            self.Redis = redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=0)
             self.IsRunning = False
             self.IsInitialized = True
-            self.Redis = redis.Redis(host=config.REDIS_HOST, port=config.REDIS_PORT, db=0)
         
         def StartPrimary(self):
             if self.IsRunning:
