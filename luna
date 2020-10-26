@@ -1,0 +1,7 @@
+#! /bin/bash
+command=""
+for i in "$*"
+do 
+    command="${command}${i}"
+done
+python3 /home/adamantius7877/source/testinggrounds/luna-mk1/luna.py --command "$command"

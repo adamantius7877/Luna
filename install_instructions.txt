@@ -1,0 +1,12 @@
+We first start by getting the project from git
+git clone https://github.com/adamantius7877/luna
+
+Then we proceed to move into the directory
+cd luna
+
+Run the correct script for your operating system
+./install/ubuntu.sh
+
+There should be a luna file that, for linux, you will need to copy to a directory in your path.  I will probably have the installation file copy it to /usr/bin by default unless otherwise requested not to.
+
+

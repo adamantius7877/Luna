@@ -1,0 +1,6 @@
+{
+    "name":"luna",
+    "command_path":"config/luna_application_commands.json",
+    "redis_host" : "87.87.10.228",
+    "redis_port" : 6379
+}
